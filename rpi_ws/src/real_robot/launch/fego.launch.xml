@@ -1,0 +1,39 @@
+<launch>
+    <arg name="sim_mode" default="false"/>
+
+    <let name="pkg_path" value="$(find-pkg-share real_robot)"/>
+
+    <let name="robot_desc_string" 
+         value="$(command 'xacro $(var pkg_path)/description/robot.urdf.xacro sim_mode:=$(var sim_mode)')" />
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
+        <param name="robot_description" value="$(var robot_desc_string)"/>
+        <param name="ignore_timestamp" value="true"/>
+    </node>
+
+    <node pkg="controller_manager" exec="ros2_control_node" name="controller_manager" output="screen">
+        <param name="robot_description" value="$(var robot_desc_string)"/>
+        <param from="$(var pkg_path)/config/controllers.yaml"/>
+    </node>
+
+    <node pkg="controller_manager" exec="spawner" name="joint_state_spawner" args="joint_state_broadcaster" output="screen" />
+    <node pkg="controller_manager" exec="spawner" name="diff_drive_spawner" args="diff_drive_controller" output="screen" />
+
+    <node pkg="v4l2_camera" exec="v4l2_camera_node" name="camera_node">
+        <param name="image_size" value="[320,240]"/>
+        <param name="camera_frame_id" value="camera_link"/>
+        <param name="reliability" value="best_effort"/>
+    </node>
+    
+    <node pkg="ldlidar_stl_ros2" exec="ldlidar_stl_ros2_node" name="LD19" output="screen">
+        <param name="product_name" value="LDLiDAR_LD19"/>
+        <param name="topic_name" value="scan"/>
+        <param name="frame_id" value="base_scan"/>
+        <param name="port_name" value="/dev/ttyAMA0"/>
+        <param name="port_baudrate" value="230400"/>
+        <param name="laser_scan_dir" value="true"/>
+        <param name="enable_angle_crop_func" value="false"/>
+        <param name="angle_crop_min" value="135.0"/>
+        <param name="angle_crop_max" value="225.0"/>
+    </node>
+</launch>

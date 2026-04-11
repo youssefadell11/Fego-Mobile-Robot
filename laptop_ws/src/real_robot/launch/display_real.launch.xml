@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="rviz2" exec="rviz2" name="rviz2" 
+          args="-d $(find-pkg-share real_robot)/rviz/urdf_config.rviz">
+        <param name="use_sim_time" value="false" />
+    </node>
+</launch>

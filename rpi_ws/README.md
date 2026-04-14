@@ -28,6 +28,13 @@ Before launching, ensure the physical connections match your configuration files
   
 (Note: The LD19 LiDAR requires its specific SDK/ROS2 driver ldlidar_stl_ros2 to be built in your workspace).
 
+## 🛜 Network Configuration
+For this workspace to communicate with the Fego Robot, both the PC and the Raspberry Pi must be on the same Wi-Fi network and share the same `ROS_DOMAIN_ID`.
+
+Export the domain ID in your terminal (or add it to your `.bashrc`):
+```bash
+export ROS_DOMAIN_ID=30 # Ensure this matches the Pc!
+```
 ## 📦 Dependencies
 Ensure the following ROS 2 Jazzy packages are installed on the Pi:
 ```bash

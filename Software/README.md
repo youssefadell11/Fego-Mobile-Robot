@@ -1,58 +1,187 @@
-# 🧠 Fego Robot: Raspberry Pi Workspace (Core)
+# 🤖 Fego Robot
 
-This workspace runs on the Raspberry Pi 5. It is the central nervous system of the Fego Robot, responsible for managing the `ros2_control` lifecycle, communicating with the Arduino motor driver, and publishing sensor data (LiDAR and Camera) to the ROS 2 network.
+A ROS 2 Jazzy differential-drive robot with Arduino-based motor control, LiDAR, and a USB camera. Three workspaces cover the full stack — from microcontroller firmware to remote visualization.
 
-## 📌 Overview
-The `rpi_ws` utilizes ROS 2 Jazzy to bridge high-level navigation commands & Teleop commands (`cmd_vel`) down to physical hardware. It relies heavily on a custom-written hardware interface plugin that bypasses standard motor controllers to talk directly to a "Dumb Arduino" via serial communication.
+![ROS 2 Jazzy](https://img.shields.io/badge/ROS_2-Jazzy-blue)
+![Platform](https://img.shields.io/badge/Platform-Raspberry_Pi_5-red)
+![MCU](https://img.shields.io/badge/MCU-Arduino-teal)
 
-## 📂 Directory Structure
+---
 
-### 1. `diffdrive_arduino` (Custom Hardware Interface)
-A custom C++ `ros2_control` SystemInterface plugin.
-- **`src/arduino_interface.cpp`**: Implements the `on_init`, `on_activate`, `read`, and `write` lifecycle nodes. It calculates the necessary PWM values based on incoming `rad/s` commands.
-- **`include/diffdrive_arduino/arduino_comms.hpp`**: Handles the low-level, high-speed asynchronous serial communication (115200 baud) using the official ROS 2 `serial_driver`.
+## 📁 Repository Structure
 
-### 2. `real_robot` (Robot Configuration & Launch)
-Contains the physical description and startup routines for Fego.
-- **`description/`**: Modular Xacro/URDF files defining the robot's links, joints, and `ros2_control` hardware tags (`robot.urdf.xacro`, `ros2_control.xacro`, `lidar.xacro`, `camera.xacro`).
-- **`config/`**: Contains `controllers.yaml` for setting up the `diff_drive_controller` and `joint_state_broadcaster`.
-- **`launch/`**:
-  - `fego.launch.xml`: The master launch file. Starts the `controller_manager`, spawns controllers, and boots up all sensor nodes (LiDAR & Camera).
-  - `motor.launch.xml` & `sensors.launch.xml`: Modular launch files for debugging specific subsystems.
+```
+Fego/
+├── firmware/       # Arduino sketch — low-level PWM motor driver
+├── rpi_ws/         # Raspberry Pi workspace — core ROS 2 stack
+├── laptop_ws/      # Laptop workspace — visualization & teleoperation
+└── README.md       # This file
+```
 
-## 🛠️ Hardware Requirements & Ports
-Before launching, ensure the physical connections match your configuration files:
-- **Arduino (Motor Driver):** Connected via USB (Defaults to `/dev/ttyUSB0` or `/dev/ttyACM0`).
-- **LD19 LiDAR:** Connected via Serial/USB (Defaults to `/dev/ttyAMA0` at 230400 baud).
-- **Webcam:** Connected via USB.
-  
-(Note: The LD19 LiDAR requires its specific SDK/ROS2 driver ldlidar_stl_ros2 to be built in your workspace).
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TB
+    Teleop["💻 Pc teleop_twist_keyboard"]
+    CmdVel(["/cmd_vel"])
+    DiffCtrl["🧠 Pi differential_drive_controller"]
+    ros2(["ros2_control"])
+    HW["🔀 Hardware Interface diffdrive_arduino"]
+    Parser["⚙️ Serial Parser"]
+    Watchdog["500ms Watchdog"]
+    PWM["PWM Output"]
+    Motors["🔩 Dual Motors"]
+
+    Teleop --> CmdVel --> DiffCtrl --> ros2 --> HW
+    HW -->|"USB Serial @ 115200"| Parser --> Watchdog --> PWM --> Motors
+
+    LD19["🔴 LD19 LiDAR"]
+    Lidar["ldlidar_stl_ros2"]
+    Scan(["/scan"])
+    RViz1["💻 RViz2 — scan"]
+
+    LD19 --> Lidar --> Scan --> RViz1
+
+    Webcam["📷 USB Webcam"]
+    Cam["v4l2_camera"]
+    Image(["/image_raw"])
+    RViz2["💻 RViz2 — image"]
+
+    Webcam --> Cam --> Image --> RViz2
+```
+---
+
+## 📦 Workspaces
+
+### 📡 `firmware/` — Arduino Motor Driver
+The `firmware.ino` sketch runs on the Arduino and acts as the direct hardware driver for the differential drive system. It listens for serial commands from the ROS 2 `diffdrive_arduino` hardware interface and outputs the corresponding PWM signals to the motor drivers.
+
+- **Protocol:** `m <left_pwm> <right_pwm>\r` at 115200 baud
+- **Safety:** 500ms watchdog — automatically halts motors if the Pi stops sending data
+
+**Pin Configuration:**
+
+| Side | Pin | Function |
+| :--- | :---: | :--- |
+| Left motor | 5 | PWM (speed) |
+| | 6 | IN1 (direction) |
+| | 7 | IN2 (direction) |
+| Right motor | 10 | PWM (speed) |
+| | 8 | IN3 (direction) |
+| | 9 | IN4 (direction) |
+
+**Upload:** Open `firmware.ino` in the Arduino IDE, select your board and port, then click **Upload**. Keep the Arduino connected via USB to the Raspberry Pi 5 before launching the ROS 2 stack.
+
+---
+
+### 🧠 `rpi_ws/` — Raspberry Pi Core Stack
+The central nervous system of Fego. Manages the `ros2_control` lifecycle, communicates with the Arduino, and publishes sensor data (LiDAR and camera) to the ROS 2 network.
+
+**Key packages:**
+- `diffdrive_arduino` — Custom C++ `ros2_control` SystemInterface plugin that translates `rad/s` commands into PWM values and sends them over serial.
+- `real_robot` — Robot URDF/Xacro description, `controllers.yaml`, and the master `fego.launch.xml` launch file.
+
+**Hardware ports (defaults):**
+
+| Device | Port | Baud |
+| :--- | :--- | :--- |
+| Arduino (motor driver) | `/dev/ttyUSB0` or `/dev/ttyACM0` | 115200 |
+| LD19 LiDAR | `/dev/ttyAMA0` | 230400 |
+| Webcam | USB (v4l2) | — |
+
+> **Note:** The LD19 LiDAR requires the `ldlidar_stl_ros2` driver to be built in your workspace.
+
+---
+
+### 💻 `laptop_ws/` — Ground Control (PC)
+Handles all graphical interfaces and remote monitoring. Contains no hardware drivers — the Raspberry Pi 5 handles all of that.
+
+**Key files:**
+- `src/real_robot/launch/display_real.launch.xml` — Primary PC launch file (boots RViz2, no hardware controllers).
+- `src/real_robot/rviz/urdf_config.rviz` — Pre-configured RViz2 layout (robot model, LiDAR `/scan`, USB camera feed).
+- `src/real_robot/meshes/` — Optimized 3D meshes: `base_link.stl`, `wheel.stl`, `caster.stl`, `lidar.stl`, `camera.stl`.
+
+---
 
 ## 🛜 Network Configuration
-For this workspace to communicate with the Fego Robot, both the PC and the Raspberry Pi must be on the same Wi-Fi network and share the same `ROS_DOMAIN_ID`.
 
-Export the domain ID in your terminal (or add it to your `.bashrc`):
+Both the PC and Raspberry Pi must be on the **same Wi-Fi network** and share the **same `ROS_DOMAIN_ID`**.
+
+Add this to your `.bashrc` on **both machines**:
 ```bash
-export ROS_DOMAIN_ID=30 # Ensure this matches the Pc!
+export ROS_DOMAIN_ID=30
 ```
-## 📦 Dependencies
-Ensure the following ROS 2 Jazzy packages are installed on the Pi:
+
+---
+
+## 🚀 Quick Start
+
+### Raspberry Pi
+
 ```bash
+# 1. Install dependencies
 sudo apt update
-sudo apt install ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-serial-driver ros-jazzy-v4l2-camera
-```
+sudo apt install ros-jazzy-ros2-control ros-jazzy-ros2-controllers \
+                 ros-jazzy-serial-driver ros-jazzy-v4l2-camera
 
-## 🚀 Build & Launch Instructions
-### 1. Build the workspace:
-```bash
+# 2. Build the workspace
 cd ~/rpi_ws
 colcon build --packages-select diffdrive_arduino real_robot
-```
-### 2. Source the environment:
-```bash
+
+# 3. Source the environment
 source install/setup.bash
-```
-### 3. Launch the Robot:
-```bash
+
+# 4. Launch the robot
 ros2 launch real_robot fego.launch.xml
 ```
+
+### Laptop (PC)
+
+```bash
+# 1. Add the drive alias (run once)
+echo 'alias drive="ros2 run teleop_twist_keyboard teleop_twist_keyboard \
+  --ros-args -p stamped:=true -p frame_id:=base_footprint \
+  -r cmd_vel:=/diff_drive_controller/cmd_vel"' >> ~/.bashrc
+source ~/.bashrc
+
+# 2. Build the workspace
+cd ~/laptop_ws
+colcon build --packages-select real_robot
+source install/setup.bash
+
+# 3. Launch RViz2 visualization
+ros2 launch real_robot display_real.launch.xml
+
+# 4. Teleoperate (open a new terminal)
+drive
+```
+
+---
+
+## 🔍 Debugging & Verification
+
+```bash
+# List all active ROS 2 topics
+ros2 topic list
+
+# Monitor target velocity from keyboard
+ros2 topic echo /cmd_vel
+
+# Monitor actual PWM values sent to the Arduino
+ros2 topic echo /cmd_vel_pwm
+```
+
+---
+
+## 📋 Dependencies Summary
+
+| Package | Where |
+| :--- | :--- |
+| `ros-jazzy-ros2-control` | Raspberry Pi |
+| `ros-jazzy-ros2-controllers` | Raspberry Pi |
+| `ros-jazzy-serial-driver` | Raspberry Pi |
+| `ros-jazzy-v4l2-camera` | Raspberry Pi |
+| `ldlidar_stl_ros2` | Raspberry Pi (build from source) |
+| `teleop_twist_keyboard` | Laptop |

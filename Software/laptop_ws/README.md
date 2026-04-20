@@ -10,6 +10,13 @@ The `laptop_ws` contains the packages necessary to visualize the robot's physica
   - `display_real.launch.xml`: The primary launch file for the PC. It connects to the ROS 2 network and boots up the visualization tools without attempting to spawn hardware controllers.
 - **`src/real_robot/rviz/`**
   - `urdf_config.rviz`: A pre-configured RViz2 layout tailored for Fego. It includes displays for the robot model (URDF), the LD19 LiDAR `/scan` data, and the USB Camera feed.
+- **`src/real_robot/meshes/`**
+  - Optimized 3D meshes specifically exported for ROS 2 simulation (RViz).
+    * `lidar.stl`
+    * `base_link.stl`
+    * `camera.stl`
+    * `caster.stl`
+    * `wheel.stl`
 
 ## 🛜 Network Configuration
 For this workspace to communicate with the Fego Robot, both the PC and the Raspberry Pi must be on the same Wi-Fi network and share the same `ROS_DOMAIN_ID`.

@@ -14,11 +14,16 @@ A custom C++ `ros2_control` SystemInterface plugin.
 
 ### 2. `real_robot` (Robot Configuration & Launch)
 Contains the physical description and startup routines for Fego.
-- **`description/`**: Modular Xacro/URDF files defining the robot's links, joints, and `ros2_control` hardware tags (`robot.urdf.xacro`, `ros2_control.xacro`, `lidar.xacro`, `camera.xacro`).
+- **`urdf/`**: Modular Xacro/URDF files defining the robot's links, joints, and `ros2_control` hardware tags (`robot.urdf.xacro`, `ros2_control.xacro`, `lidar.xacro`, `camera.xacro`).
+- **`meshes/`**: Optimized 3D meshes specifically exported for ROS 2 simulation (`RViz`).
+    * `lidar.stl`
+    * `base_link.stl`
+    * `camera.stl`
+    * `caster.stl`
+    * `wheel.stl`
 - **`config/`**: Contains `controllers.yaml` for setting up the `diff_drive_controller` and `joint_state_broadcaster`.
 - **`launch/`**:
   - `fego.launch.xml`: The master launch file. Starts the `controller_manager`, spawns controllers, and boots up all sensor nodes (LiDAR & Camera).
-  - `motor.launch.xml` & `sensors.launch.xml`: Modular launch files for debugging specific subsystems.
 
 ## 🛠️ Hardware Requirements & Ports
 Before launching, ensure the physical connections match your configuration files:

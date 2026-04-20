@@ -17,6 +17,30 @@ Fego/
 ├── laptop_ws/      # Laptop workspace — visualization & teleoperation
 └── README.md       # This file
 ```
+---
+
+## 🖼️ System Visualization
+
+### 💻 RViz2 Visualization
+
+<p align="center">
+<img src="index/rviz_screenshot.png" alt="Fusion360 Fego Mobile Robot" width="700">
+</p>
+<p align="center">
+Figure 1: Rviz2 showing the Fego Robot URDF, LaserScan data, and Camera feed.
+</p>
+
+
+### 🔄 Topic Network Overview
+The system relies on a distributed node network. High-level commands flow from the Laptop to the Pi 5, while sensor data and hardware states flow back. 
+
+<p align="center">
+<img src="index/topics.png" alt="Fusion360 Fego Mobile Robot" width="800">
+</p>
+
+* **Actuations:** `/cmd_vel` (Laptop → Pi 5) and `/cmd_vel_pwm` (Pi 5 → Arduino).
+* **Sensors:** `/scan` (LiDAR) and `/image_raw` (Camera).
+* **Transformations:** `/tf` and `/odom` for localization.
 
 ---
 
@@ -51,6 +75,8 @@ flowchart TB
 
     Webcam --> Cam --> Image --> RViz2
 ```
+
+> **Note:** Here is the [PDF for the system flowchart](/Software/index/Flowchart.pdf) if you want more information on how the hardware and ROS topics interact.
 ---
 
 ## 📦 Workspaces

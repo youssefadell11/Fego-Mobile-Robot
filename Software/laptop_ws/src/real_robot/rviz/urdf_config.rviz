@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /RobotModel1/Description Topic1
+        - /TF1
         - /Odometry1/Topic1
       Splitter Ratio: 0.5
     Tree Height: 241
@@ -25,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -74,17 +75,21 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        base_scan:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         camera_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         castor_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -118,11 +123,13 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
-        base_scan:
-          Value: true
         camera_link:
           Value: true
+        camera_link_optical:
+          Value: true
         castor_wheel_link:
+          Value: true
+        laser_frame:
           Value: true
         left_wheel_link:
           Value: true
@@ -130,7 +137,7 @@ Visualization Manager:
           Value: true
         right_wheel_link:
           Value: true
-      Marker Scale: 1
+      Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
       Show Axes: true
@@ -139,11 +146,12 @@ Visualization Manager:
         odom:
           base_footprint:
             base_link:
-              base_scan:
-                {}
               camera_link:
-                {}
+                camera_link_optical:
+                  {}
               castor_wheel_link:
+                {}
+              laser_frame:
                 {}
               left_wheel_link:
                 {}
@@ -284,7 +292,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 6.996328830718994
+      Distance: 1.16849684715271
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -299,10 +307,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4403984546661377
+      Pitch: 0.35539862513542175
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.763582706451416
+      Yaw: 2.7835865020751953
     Saved: ~
 Window Geometry:
   Displays:

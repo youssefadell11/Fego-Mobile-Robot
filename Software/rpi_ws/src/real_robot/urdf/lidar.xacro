@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<joint name="laser_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_scan"/>
+        <origin xyz="0.02 0 0.05" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base_scan">
+        <visual>
+            <geometry>
+                <mesh filename="package://${pkg}/meshes/lidar.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="black"/>
+        </visual>
+    </link>
+</robot>

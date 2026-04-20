@@ -23,5 +23,5 @@ diff_drive_controller:
     enable_odom_tf: true
 
     wheels_per_side: 1
-    wheel_separation: 0.297
-    wheel_radius: 0.033
+    wheel_separation: 0.186
+    wheel_radius: 0.0325

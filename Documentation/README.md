@@ -1,11 +1,6 @@
-# Fego Mobile Robot
+# Fego Mobile Robot Documentation
+This documentation provides a comprehensive overview of the design, assembly, and testing of the Fego mobile robot, a differential drive platform equipped with LiDAR and camera sensors. The project encompasses 3D CAD modeling, hardware integration, software visualization, and real-world performance demonstrations.
 
-**Author:** Youssef Adel Wahba Boutros
-
-## Project Overview
-The Fego Robot is a custom-built differential drive mobile platform. Powered by a Raspberry Pi 5 and utilizing `ros2_control`, this project bridges the gap between hardware assembly and advanced ROS 2 robotics software. This documentation covers the 3D design, physical hardware build, software visualization, and real-world testing.
-
----
 
 ## 1. 3D CAD Design (Fusion 360)
 The chassis and component placements were initially modeled in Autodesk Fusion 360 to ensure optimal weight distribution and sensor mounting.

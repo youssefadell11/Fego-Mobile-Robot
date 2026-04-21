@@ -1,15 +1,15 @@
-# 🤖 Fego Mobile Robot CAD
+# Fego Mobile Robot CAD
 
-Welcome to the open-source CAD repository for the **Fego Mobile Robot**! This is a 2-Wheel Drive (2WD) differential mobile robot designed from the bottom-up using **`Fusion 360`**. 
+Welcome to the open-source CAD folder for the **Fego Mobile Robot**! This is a 2-Wheel Drive (2WD) differential mobile robot designed from the bottom-up using **`Fusion 360`**. 
 
-This repository contains all the mechanical CAD files, manufacturing 2D profiles, and 3D meshes required to build the physical robot or simulate it in ROS 2 (RViz/Gazebo).
+This folder contains all the mechanical CAD files, manufacturing 2D profiles, and 3D meshes required to build the physical robot or simulate it in ROS 2 (RViz/Gazebo).
 <p align="center">
 <img src="4_Renders/Fusion360_Fego_Mobile_Robot.jpg" alt="Fusion360 Fego Mobile Robot" width="700">
 </p>
 
 ## 🗂️ Folder Structure
 
-The hardware files in this repository are organized to help you find exactly what you need, whether you want to 3D print the whole robot, cut the chassis, or just borrow a sensor model for your own project.
+The CAD files in this folder are organized to help you find exactly what you need, whether you want to 3D print the whole robot, cut the chassis, or just borrow a sensor model for your own project.
 
 ### **`1_Full_Assembly/`**
 Contains the complete, assembled robot model.

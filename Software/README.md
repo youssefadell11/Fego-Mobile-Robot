@@ -1,4 +1,4 @@
-# 🤖 Fego Robot
+# Fego Mobile Robot Software
 
 A ROS 2 Jazzy differential-drive robot with Arduino-based motor control, LiDAR, and a USB camera. Three workspaces cover the full stack — from microcontroller firmware to remote visualization.
 

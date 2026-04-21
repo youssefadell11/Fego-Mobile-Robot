@@ -55,7 +55,11 @@ The robot's URDF, sensor data, and odometry are visualized in real-time using RV
 ## 4. Real-World Testing
 Watch the Fego mobile base navigating and demonstrating its differential drive system and `ros2_control` integration.
 
-<video width="100%" controls>
-  <source src="Videos/RealWorld_Testing.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<p align="center">
+  <em>Please hit the image to see the YouTube video!</em><br>
+</p>
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
+    <img src="Images/Real_Robot/6_Thumbnail_image.jpg" width="800" alt="Click to watch the Fego Robot video">
+  </a>
+</p>

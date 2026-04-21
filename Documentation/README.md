@@ -59,7 +59,7 @@ Watch the Fego mobile base navigating and demonstrating its differential drive s
   <em>Please hit the image to see the YouTube video!</em><br>
 </p>
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
+  <a href="https://youtu.be/x8awXbyMQPw">
     <img src="Images/Real_Robot/6_Thumbnail_image.jpg" width="800" alt="Click to watch the Fego Robot video">
   </a>
 </p>

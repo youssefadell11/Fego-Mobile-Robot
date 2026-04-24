@@ -6,7 +6,7 @@ This documentation provides a comprehensive overview of the design, assembly, an
 The chassis and component placements were initially modeled in Autodesk Fusion 360 to ensure optimal weight distribution and sensor mounting.
 
 <p align="center">
-  <img src="Images/Fusion360/Fusion360_Fego_Mobile_Robot.jpg" width="800" alt="Fusion 360 Overall Model">
+  <img src="Documentation/Images/Fusion360/Fusion360_Fego_Mobile_Robot.jpg" width="800" alt="Fusion 360 Overall Model">
 </p>
 
 <p align="center">
